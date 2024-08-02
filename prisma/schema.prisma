@@ -13,3 +13,58 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id              Int       @id @default(autoincrement())
+  username        String    @unique
+  email           String    @unique
+  password        String
+  name            String 
+  lastname        String?
+  phone           Int       @unique
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  postjobs        PostJob[]
+  countryName     String    @unique
+  provinceName    String    @unique
+  cityName        String    @unique
+  country         Country   @relation(fields: [countryName], references: [name])
+  province        Province  @relation(fields: [provinceName], references: [name])
+  city            City      @relation(fields: [cityName], references: [name])
+}
+
+model PostJob {
+  id              Int       @id @default(autoincrement())
+  title           String
+  description     String
+  job_location    String
+  status          Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  userId          Int 
+  user            User      @relation(fields: [userId], references: [id])
+}
+
+model Country {
+  id              Int       @id @default(autoincrement())
+  name            String    @unique
+  provinces       Province[]
+  users           User?
+
+}
+
+model Province {
+  id              Int       @id @default(autoincrement())
+  name            String    @unique
+  countryId       Int
+  country         Country   @relation(fields: [countryId], references: [id])
+  cities          City[]
+  users           User?
+}
+
+model City {
+  id              Int       @id @default(autoincrement())
+  name            String    @unique
+  provinceId      Int
+  province        Province  @relation(fields: [provinceId], references: [id])
+  users           User?
+}
