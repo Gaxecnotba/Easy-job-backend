@@ -1,13 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+import admin from "firebase-admin";
+import serviceAccount from "../../serviceAccountKey.json" assert { type: "json" };
 
-const prismaClientSingleton = () => {
-  return new PrismaClient();
-};
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://easyjobs-812ee-default-rtdb.firebaseio.com",
+});
 
-const globalForPrisma = globalThis;
-
-const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
-
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
-
-export default prisma;
+const db = admin.firestore();
+const auth = admin.auth();
+export { db, admin, auth };

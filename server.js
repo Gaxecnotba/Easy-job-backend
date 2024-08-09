@@ -1,14 +1,13 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-
 import bodyParser from "body-parser";
-import routeuser from "./src/routers/index.js";
+import router from "./src/routers/index.js";
 
 dotenv.config();
-const port = process.env.PORT;
+
+const port = process.env.PORT || 3000;
 const app = express();
-app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -18,7 +17,7 @@ app.get("/", (req, res) => {
   res.json({ message: "Working" });
 });
 
-app.use("/", routeuser);
+app.use("/", router); // Make sure this matches the route in Postman
 
 app.all("*", (req, res) => {
   res.status(404).json({
@@ -32,10 +31,11 @@ app.all("*", (req, res) => {
 
 const handleError = (err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).r.json({
+  res.status(500).json({
     msg: "Internal server error",
   });
 };
+
 app.use(handleError);
 
 app.listen(port, () => {
