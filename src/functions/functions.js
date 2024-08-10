@@ -3,6 +3,7 @@ import { db, admin } from "../db/db.js";
 async function createUser(data) {
   const userRef = db.collection("users").doc();
   await userRef.set({
+    uid: data.uid,
     username: data.username,
     email: data.email,
     name: data.name,
@@ -17,13 +18,21 @@ async function createUser(data) {
 }
 
 async function getUserById(userId) {
-  const userRef = db.collection("users").doc(userId);
-  const doc = await userRef.get();
-  if (!doc.exists) {
-    console.log("No such document!");
+  try {
+    console.log(`Fetching user with ID: ${userId}`);
+    const userRef = db.collection("users").doc(userId);
+    const doc = await userRef.get();
+
+    if (!doc.exists) {
+      console.error(`User with ID ${userId} not found`);
+      return null;
+    } else {
+      console.log(`User with ID ${userId} found`);
+      return doc.data();
+    }
+  } catch (error) {
+    console.error("Error fetching user data:", error);
     return null;
-  } else {
-    return doc.data();
   }
 }
 

@@ -20,6 +20,7 @@ async function createPostJob(userId, data) {
 
 async function createPostForAuthenticatedUser(data, idToken) {
   try {
+    console.log("recieved toekn:" + idToken);
     const decodedToken = await auth.verifyIdToken(idToken); // Verificar el token de identificación del usuario
     const userId = decodedToken.uid; // Obtener el userId del token
 

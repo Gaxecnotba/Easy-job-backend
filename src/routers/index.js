@@ -1,29 +1,74 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { createPostForAuthenticatedUser } from "../functions/functionsP.js";
+import { getUserById, createUser } from "../functions/functions.js";
+import { admin } from "../db/db.js";
 
 const router = express.Router();
 
 router.use(bodyParser.json());
 
-router.post("/createpost", (req, res) => {
-  res.status(200).json({ message: "Create post route is working!" });
+router.post("/users/create", async (req, res) => {
+  const { uid, email } = req.body;
+  const data = {
+    uid: uid,
+    username: "",
+    email: email,
+    name: "",
+    lastname: "",
+    phone: "",
+    countryName: "",
+    provinceName: "",
+    cityName: "",
+  };
+  try {
+    const usercreated = await createUser(data);
+    if (usercreated) {
+      res.json({ message: "User created successfully" });
+    } else {
+      res.json({ message: "User not created, something happened" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-router.get("/fetchingrouter", (req, res) => {
-  res.status(200).json({ message: "Create post route is working!" });
-});
-// router.post("/createpost", async (req, res) => {
-//   console.log("POST /createpost called"); // Add this line for debugging
-//   const { idToken, postData } = req.body;
+router.get("/users/:userid", async (req, res) => {
+  const { authtoken } = req.headers;
+  const { userid } = req.params;
+  console.log(userid);
+  try {
+    const authUser = await admin.auth().verifyIdToken(authtoken);
 
-//   try {
-//     await createPostForAuthenticatedUser(postData, idToken);
-//     res.status(200).send("Post created successfully!");
-//   } catch (error) {
-//     res.status(500).send("Error creating post: " + error.message);
-//   }
-// });
+    if (authUser.uid !== userid) {
+      return res.status(403).json({ message: "Unauthorized access" });
+    }
+
+    const user = await getUserById(userid);
+    if (user) {
+      res.json({ message: "User found", user });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    console.error("Error verifying token or fetching user:", error);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
+});
+
+router.post("/createpost", async (req, res) => {
+  const { authtoken } = req.headers;
+  const { postData } = req.body;
+
+  try {
+    await createPostForAuthenticatedUser(postData, authtoken);
+    res.status(200).send("Post created successfully!");
+  } catch (error) {
+    res.status(500).send("Error creating post: " + error.message);
+  }
+});
 
 export default router;
 
