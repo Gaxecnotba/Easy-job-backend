@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
   res.json({ message: "Working" });
 });
 
-app.use("/", router); // Make sure this matches the route in Postman
+app.use("/", router);
 
 app.all("*", (req, res) => {
   res.status(404).json({

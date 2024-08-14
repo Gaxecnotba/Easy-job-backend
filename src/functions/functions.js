@@ -17,17 +17,17 @@ async function createUser(data) {
   });
 }
 
-async function getUserById(userId) {
+async function getUserById(uid) {
   try {
-    console.log(`Fetching user with ID: ${userId}`);
-    const userRef = db.collection("users").doc(userId);
+    console.log(`Fetching user with ID: ${uid}`);
+    const userRef = db.collection("users").doc(uid);
     const doc = await userRef.get();
 
     if (!doc.exists) {
-      console.error(`User with ID ${userId} not found`);
+      console.error(`User with ID ${uid} not found`);
       return null;
     } else {
-      console.log(`User with ID ${userId} found`);
+      console.log(`User with ID ${uid} found`);
       return doc.data();
     }
   } catch (error) {

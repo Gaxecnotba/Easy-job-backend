@@ -38,15 +38,15 @@ router.get("/users/:userid", async (req, res) => {
   const { userid } = req.params;
   console.log(userid);
   try {
-    const authUser = await admin.auth().verifyIdToken(authtoken);
+    // const authUser = await admin.auth().verifyIdToken(authtoken);
 
-    if (authUser.uid !== userid) {
-      return res.status(403).json({ message: "Unauthorized access" });
-    }
+    // if (authUser.uid !== userid) {
+    //   return res.status(403).json({ message: "Unauthorized access" });
+    // }
 
     const user = await getUserById(userid);
     if (user) {
-      res.json({ message: "User found", user });
+      res.json({ user });
     } else {
       res.status(404).json({ message: "User not found" });
     }
@@ -59,11 +59,11 @@ router.get("/users/:userid", async (req, res) => {
 });
 
 router.post("/createpost", async (req, res) => {
-  const { authtoken } = req.headers;
+  // const { uid } = req.headers;
   const { postData } = req.body;
 
   try {
-    await createPostForAuthenticatedUser(postData, authtoken);
+    await createPostForAuthenticatedUser(postData);
     res.status(200).send("Post created successfully!");
   } catch (error) {
     res.status(500).send("Error creating post: " + error.message);
