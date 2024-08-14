@@ -20,15 +20,19 @@ async function createUser(data) {
 async function getUserById(uid) {
   try {
     console.log(`Fetching user with ID: ${uid}`);
-    const userRef = db.collection("users").doc(uid);
-    const doc = await userRef.get();
+    const userRef = await db.collection("users").where("uid", "==", uid).get();
 
-    if (!doc.exists) {
+    if (!userRef) {
       console.error(`User with ID ${uid} not found`);
       return null;
     } else {
       console.log(`User with ID ${uid} found`);
-      return doc.data();
+
+      const userData = [];
+      userRef.forEach((doc) => {
+        userData.push(doc.data());
+      });
+      return userData;
     }
   } catch (error) {
     console.error("Error fetching user data:", error);

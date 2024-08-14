@@ -43,18 +43,18 @@ router.post("/users/create", async (req, res) => {
   }
 });
 
-router.get("/users/:userid", async (req, res) => {
+router.get("/users/:uid", async (req, res) => {
   const { authtoken } = req.headers;
-  const { userid } = req.params;
-  console.log(userid);
+  const { uid } = req.params;
+  console.log(uid);
   try {
     // const authUser = await admin.auth().verifyIdToken(authtoken);
 
-    // if (authUser.uid !== userid) {
+    // if (authUser.uid !== uid) {
     //   return res.status(403).json({ message: "Unauthorized access" });
     // }
 
-    const user = await getUserById(userid);
+    const user = await getUserById(uid);
     if (user) {
       res.json({ user });
     } else {
