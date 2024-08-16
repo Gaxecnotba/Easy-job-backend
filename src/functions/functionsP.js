@@ -37,4 +37,4 @@ async function createPostForAuthenticatedUser(data) {
 // };
 // createPostJob("userId", data);
 
-export { createPostForAuthenticatedUser };
+export { createPostForAuthenticatedUser, createPostJob };
