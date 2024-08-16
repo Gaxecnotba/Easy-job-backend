@@ -18,6 +18,45 @@ async function createPostJob(data) {
   });
 }
 
+async function getAllJobs() {
+  const jobs = [];
+  try {
+    const snapshot = await db.collection("postjobs").get();
+    console.log("Document data:", snapshot);
+    if (!snapshot) {
+      console.log("No Jobs found");
+    } else {
+      snapshot.forEach((doc) => {
+        jobs.push(doc.data());
+      });
+      return jobs;
+    }
+  } catch (error) {
+    console.error("Error getting jobs:", error);
+  }
+}
+async function getJobsById(title) {
+  try {
+    const snapshot = await db
+      .collection("postjobs")
+      .where("title", "==", title)
+      .get();
+    console.log("Document data:", snapshot);
+    console.log("Document data:", title);
+    if (!snapshot) {
+      console.log("No such document: ", title);
+    } else {
+      const dataJob = [];
+      snapshot.forEach((doc) => {
+        dataJob.push(doc.data());
+      });
+      return dataJob;
+    }
+  } catch (error) {
+    console.error("Error getting jobs:", error);
+  }
+}
+
 async function createPostForAuthenticatedUser(data) {
   try {
     // console.log("recieved toekn:" + idToken);
@@ -30,11 +69,10 @@ async function createPostForAuthenticatedUser(data) {
     console.error("Error creating post:", error);
   }
 }
-// const data = {
-//   title: "Post Title",
-//   description: "Post Description",
-//   job_location: "Location",
-// };
-// createPostJob("userId", data);
 
-export { createPostForAuthenticatedUser, createPostJob };
+export {
+  createPostForAuthenticatedUser,
+  createPostJob,
+  getAllJobs,
+  getJobsById,
+};

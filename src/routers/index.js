@@ -3,6 +3,8 @@ import bodyParser from "body-parser";
 import {
   createPostForAuthenticatedUser,
   createPostJob,
+  getAllJobs,
+  getJobsById,
 } from "../functions/functionsP.js";
 import { getUserById, createUser } from "../functions/functions.js";
 import { admin } from "../db/db.js";
@@ -88,6 +90,35 @@ router.post("/createpost", async (req, res) => {
     res.status(200).send("Post created successfully!");
   } catch (error) {
     res.status(500).send("Error creating post: " + error.message);
+  }
+});
+
+router.get("/jobs", async (req, res) => {
+  try {
+    const jobs = await getAllJobs();
+    if (jobs) {
+      res.json({ jobs });
+    } else {
+      res.status(404).json({ message: "No jobs found" });
+    }
+  } catch (error) {
+    console.error("Error getting jobs:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.get("/jobs/:title", async (req, res) => {
+  const { title } = req.params;
+  try {
+    const job = await getJobsById(title);
+    if (job) {
+      res.json({ job });
+    } else {
+      res.status(404).json({ message: "Job not found" });
+    }
+  } catch (error) {
+    console.error("Error getting job:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
