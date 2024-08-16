@@ -1,6 +1,9 @@
 import express from "express";
 import bodyParser from "body-parser";
-import { createPostForAuthenticatedUser } from "../functions/functionsP.js";
+import {
+  createPostForAuthenticatedUser,
+  createPostJob,
+} from "../functions/functionsP.js";
 import { getUserById, createUser } from "../functions/functions.js";
 import { admin } from "../db/db.js";
 
@@ -72,10 +75,16 @@ router.get("/users/:uid", async (req, res) => {
 
 router.post("/createpost", async (req, res) => {
   // const { uid } = req.headers;
-  const { postData } = req.body;
+  const { uid, title, description, location } = req.body;
+  const postData = {
+    uid: uid,
+    title: title,
+    description: description,
+    job_location: location,
+  };
 
   try {
-    await createPostForAuthenticatedUser(postData);
+    await createPostJob(postData);
     res.status(200).send("Post created successfully!");
   } catch (error) {
     res.status(500).send("Error creating post: " + error.message);
