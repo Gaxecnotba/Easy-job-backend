@@ -7,7 +7,7 @@ async function createUser(data) {
     username: data.username,
     email: data.email,
     name: data.name,
-    lastname: data.lastname,
+    lastname: data.lastName,
     phone: data.phone,
     createdAt: admin.firestore.FieldValue.serverTimestamp(),
     updatedAt: admin.firestore.FieldValue.serverTimestamp(),
