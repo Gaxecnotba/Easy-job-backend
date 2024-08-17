@@ -18,7 +18,8 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "firebase": "^10.12.5",
-    "firebase-admin": "^12.3.1"
+    "firebase-admin": "^12.3.1",
+    "start": "^5.1.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
